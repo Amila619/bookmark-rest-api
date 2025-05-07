@@ -1,6 +1,8 @@
 from flask import Flask
 from dotenv import load_dotenv
 import os
+from .auth import auth
+from .bookmarks import bookmarks
 
 load_dotenv()
 
@@ -14,15 +16,7 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
         
+    app.register_blueprint(auth)
+    app.register_blueprint(bookmarks)
 
-    @app.get('/')
-    def index():
-        return "nigga server"
-
-    @app.get('/demo')
-    def demo():
-        return {
-            "message" : "Nigga this server runnning to hot"
-        }
-    
     return app
