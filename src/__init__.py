@@ -3,19 +3,18 @@ from dotenv import load_dotenv
 import os
 from .auth import auth
 from .bookmarks import bookmarks
+from .config import Config
+from .database import db
 
-load_dotenv()
+def create_app():
+    app = Flask(__name__)
 
-def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(Config)
 
-    if test_config is None:
-        app.config.from_mapping(
-            SECRET_KEY=os.getenv('SECRET_KEY'),
-        )
-    else:
-        app.config.from_mapping(test_config)
-        
+    db.init_app(app)
+    with app.app_context():
+      db.create_all()
+
     app.register_blueprint(auth)
     app.register_blueprint(bookmarks)
 
