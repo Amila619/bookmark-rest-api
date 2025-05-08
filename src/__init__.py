@@ -5,6 +5,7 @@ from .auth import auth
 from .bookmarks import bookmarks
 from .config import Config
 from .database import db
+from flask_jwt_extended import JWTManager
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +15,8 @@ def create_app():
     db.init_app(app)
     with app.app_context():
       db.create_all()
+
+    JWTManager(app)
 
     app.register_blueprint(auth)
     app.register_blueprint(bookmarks)
