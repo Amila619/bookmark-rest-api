@@ -44,4 +44,6 @@ def create_app():
        return {
           "error" : "Something went wrong please try again"
        }, HTTP_500_INTERNAL_SERVER_ERROR
+    
+    
     return app

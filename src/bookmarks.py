@@ -144,3 +144,22 @@ def modify_bookmark(id):
         "updated_at" : bookmark.updated_at,
         "visit" : bookmark.visits 
     },  HTTP_200_OK
+
+
+@bookmarks.get('/stats')
+@jwt_required()
+def get_stats():
+    current_user = get_jwt_identity()
+
+    items = Bookmark.query.filter_by(user_id=current_user).all()
+
+    return {
+        "data" : [
+            {
+                "visits" : item.visits,
+                "url" : item.url,
+                "id" : item.id,
+                "short_url" : item.short_url
+            } for item in items
+        ]
+    }, HTTP_200_OK
