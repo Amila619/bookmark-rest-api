@@ -39,15 +39,32 @@ def handle_bookmarks():
                 "updated_at" : bookmark.updated_at
             }, HTTP_201_CREATED
     else:
-        all_bookmarks = Bookmark.query.filter_by(user_id=current_user).all()
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 5, type=int)
+
+        all_bookmarks = Bookmark.query.filter_by(user_id=current_user).paginate(page=page, per_page=per_page)
         return {"data" : [
-            {
-                "id" : bookmark.id,
-                "url" : bookmark.url,
-                "short_url" : bookmark.short_url,
-                "body" : bookmark.body,
-                "created_at" : bookmark.created_at,
-                "updated_at" : bookmark.updated_at,
-                "visit" : bookmark.visits 
-            } for bookmark in all_bookmarks
-        ]}, HTTP_200_OK 
+                {
+                    "id" : bookmark.id,
+                    "url" : bookmark.url,
+                    "short_url" : bookmark.short_url,
+                    "body" : bookmark.body,
+                    "created_at" : bookmark.created_at,
+                    "updated_at" : bookmark.updated_at,
+                    "visit" : bookmark.visits 
+                } for bookmark in all_bookmarks
+            ],
+
+            "meta" : {
+                "page": all_bookmarks.page,
+                "pages": all_bookmarks.pages,
+                "total_count": all_bookmarks.total,
+                "prev_page": all_bookmarks.prev_num,
+                "next_page": all_bookmarks.next_num,
+                "has_next": all_bookmarks.has_next,
+                "has_prev": all_bookmarks.has_prev
+
+            }
+
+
+        }, HTTP_200_OK 
