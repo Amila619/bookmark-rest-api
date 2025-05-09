@@ -7,9 +7,13 @@ from .config import Config
 from .database import db, Bookmark
 from .http_status_codes import *
 from flask_jwt_extended import JWTManager
+from flask_swagger_ui import get_swaggerui_blueprint
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
+
 
     app.config.from_object(Config)
 
@@ -22,6 +26,20 @@ def create_app():
 
     app.register_blueprint(auth)
     app.register_blueprint(bookmarks)
+
+    
+    API_URL = '/static/api.yaml' 
+    SWAGGER_URL = '/api/docs'
+
+    swaggerui_blueprint = get_swaggerui_blueprint(
+      SWAGGER_URL,
+      API_URL, 
+      config={ 
+         "app_name": "RPS"
+      }
+   )
+
+    app.register_blueprint(swaggerui_blueprint)
 
     @app.get('/<short_url>')
     def redirect_to_url(short_url):
