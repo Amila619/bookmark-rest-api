@@ -98,14 +98,14 @@ def get_bookmark(id):
 def delete_bookmark(id):
     current_user = get_jwt_identity()
 
-    bookmark = Bookmark.query.filter_by(user_id=current_user, id=id)
+    bookmark = Bookmark.query.filter_by(user_id=current_user, id=id).first()
 
-    if not bookmark.first():
+    if not bookmark:
         return {
             "messsage" : "Item not found"
         }, HTTP_404_NOT_FOUND
         
-    bookmark.delete(synchronize_session = False)
+    db.session.delete(bookmark)
     db.session.commit()
 
     return {}, HTTP_204_NO_CONTENT
