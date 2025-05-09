@@ -16,7 +16,8 @@ def create_app():
     with app.app_context():
       db.create_all()
 
-    JWTManager(app)
+    jwt = JWTManager()
+    jwt.init_app(app)
 
     app.register_blueprint(auth)
     app.register_blueprint(bookmarks)

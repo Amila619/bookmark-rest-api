@@ -26,10 +26,10 @@ def register():
     if not validators.email(email):
         return {"error" : "Email is not valid"}, HTTP_400_BAD_REQUEST
     
-    if User.query.filter_by(email=email).first() is not None:
+    if User.query.filter_by(email=email).first():
         return {"error" : "Email is already taken"}, HTTP_409_CONFLICT    
 
-    if User.query.filter_by(username=username).first() is not None:
+    if User.query.filter_by(username=username).first():
         return {"error" : "Username is already taken"}, HTTP_409_CONFLICT
 
     pwd_hash = generate_password_hash(password)
